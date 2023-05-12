@@ -8,7 +8,15 @@
   <br />
   <input type="submit" />
 </form>
-<hr/>
+<hr />
 <button type="button" (click)="onCallParamFn()">Call paramFn</button>
 <button type="button" (click)="onCallWithCallback()">Call withCallback</button>
-<button type="button" (click)="onCallParamComplexObject()">Call paramComplexObject</button>
+<button type="button" (click)="onCallParamComplexObject()">
+  Call paramComplexObject
+</button>
+<hr />
+<h3>Upload xlsx</h3>
+<form [formGroup]="uploadForm" (ngSubmit)="onSubmitUploadForm()">
+  <input type="file"  (change)="onChangeFileInput($event)" />
+  <input type="submit" />
+</form>

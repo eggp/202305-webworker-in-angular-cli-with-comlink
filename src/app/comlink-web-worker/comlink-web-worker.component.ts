@@ -9,6 +9,7 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { proxy } from 'comlink';
 import { WorkerDto } from './worker/type/worker.dto';
+import { read, utils } from 'xlsx';
 
 @Component({
   selector: 'app-comlink-web-worker',
@@ -23,6 +24,9 @@ export class ComlinkWebWorkerComponent {
       nonNullable: true,
       validators: Validators.required,
     }),
+  });
+  uploadForm = new FormGroup({
+    file: new FormControl<File | null>(null, Validators.required),
   });
 
   onSubmitSetParamString() {
@@ -63,5 +67,24 @@ export class ComlinkWebWorkerComponent {
       ],
     };
     this.#worker.paramComplexObject(dto);
+  }
+
+  onSubmitUploadForm() {
+    if (this.uploadForm.valid) {
+      const fileReader = new FileReader();
+      fileReader.onload = (e: any) => {
+        // const workBook = read(this.uploadForm.value.file!,{type:'file'});
+        const workBook = read(e.target.result, { type: 'binary' });
+        const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
+        console.log(utils.sheet_to_json(firstSheet).length);
+      };
+      fileReader.readAsBinaryString(this.uploadForm.value.file!);
+    }
+  }
+
+  onChangeFileInput(e: Event) {
+    this.uploadForm.patchValue({
+      file: (e.target as HTMLInputElement).files![0],
+    });
   }
 }
