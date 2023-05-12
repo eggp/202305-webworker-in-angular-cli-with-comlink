@@ -15,11 +15,12 @@ export class ComlinkWorker {
     private _paramFn: (param: string) => string
   ) {}
 
-  get paramString(): string {
+  get paramString() {
     return this._paramString;
   }
 
   set paramString(value: string) {
+    console.log('[ComlinkWorker]', 'call setParamString: ', value);
     this._paramString = value;
   }
 
@@ -31,12 +32,16 @@ export class ComlinkWorker {
     this._paramFn = value;
   }
 
+  callParamFn() {
+    this._paramFn('call');
+  }
+
   doSomething(param: number) {
     return param * 5;
   }
 
   withCallback(paramFn: (param: number) => void) {
-    timer(5000, 5000).subscribe(paramFn);
+    timer(2000, 2000).subscribe(paramFn);
   }
 
   paramComplexObject(param: WorkerDto) {

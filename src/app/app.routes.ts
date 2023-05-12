@@ -1,11 +1,4 @@
-import {
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Routes,
-  UrlTree,
-} from '@angular/router';
-import { Observable } from 'rxjs';
-import { type SimpleWebWorkerComponent } from './simple-web-worker/simple-web-worker.component';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -20,31 +13,12 @@ export const routes: Routes = [
   },
   {
     path: 'simple-web-worker',
-    loadComponent: () =>
-      import('./simple-web-worker/simple-web-worker.component').then(
-        (m) => m.SimpleWebWorkerComponent
-      ),
-    resolve: {
-      worker: () =>
-        new Worker(
-          new URL('./simple-web-worker/worker/simple.worker', import.meta.url)
-        ),
-    },
-    canDeactivate: [
-      (
-        component: SimpleWebWorkerComponent,
-        currentRoute: ActivatedRouteSnapshot
-      ) => {
-        (currentRoute.data['worker'] as Worker).terminate();
-        return true;
-      },
-    ],
+    loadChildren: () =>
+      import('./simple-web-worker/routes').then((m) => m.ROUTES),
   },
   {
     path: 'comlink-web-worker',
-    loadComponent: () =>
-      import('./comlink-web-worker/comlink-web-worker.component').then(
-        (m) => m.ComlinkWebWorkerComponent
-      ),
+    loadChildren: () =>
+      import('./comlink-web-worker/routes').then((m) => m.ROUTES),
   },
 ];

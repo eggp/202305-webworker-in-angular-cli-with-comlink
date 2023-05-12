@@ -1,1 +1,14 @@
-<p>comlink-web-worker works!</p>
+<button type="button" routerLink="./../home" [relativeTo]="null">
+  back to home
+</button>
+<hr />
+<form [formGroup]="form" (ngSubmit)="onSubmitSetParamString()">
+  <label for="msg">Call with string param:</label>
+  <input id="msg" type="text" formControlName="msg" />
+  <br />
+  <input type="submit" />
+</form>
+<hr/>
+<button type="button" (click)="onCallParamFn()">Call paramFn</button>
+<button type="button" (click)="onCallWithCallback()">Call withCallback</button>
+<button type="button" (click)="onCallParamComplexObject()">Call paramComplexObject</button>
