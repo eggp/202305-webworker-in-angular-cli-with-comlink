@@ -1,1 +1,10 @@
-<p>simple-web-worker works!</p>
+<button type="button" routerLink="./../home" [relativeTo]="null">
+  back to home
+</button>
+<hr />
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="msg">Message:</label>
+  <input id="msg" type="text" formControlName="msg" />
+  <br />
+  <input type="submit" />
+</form>
