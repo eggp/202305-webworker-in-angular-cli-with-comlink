@@ -1,0 +1,1 @@
+(()=>{"use strict";console.log("[SIMPLE WORKER]","Start simple worker"),addEventListener("message",({data:e})=>{console.log("[SIMPLE WORKER]","Got message: ",e),postMessage(`worker response to ${e}`)})})();
