@@ -18,9 +18,3 @@
 <button type="button" (click)="onCallParamComplexObject()">
   Call paramComplexObject
 </button>
-<hr />
-<h3>Upload xlsx</h3>
-<form [formGroup]="uploadForm" (ngSubmit)="onSubmitUploadForm()">
-  <input type="file"  (change)="onChangeFileInput($event)" />
-  <input type="submit" />
-</form>

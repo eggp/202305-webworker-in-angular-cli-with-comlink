@@ -26,9 +26,6 @@ export class ComlinkWebWorkerComponent {
       validators: Validators.required,
     }),
   });
-  uploadForm = new FormGroup({
-    file: new FormControl<File | null>(null, Validators.required),
-  });
   #worker = inject(ActivatedRoute).snapshot.data['worker'].proxyWorker;
   #excelWorker!: RemoteObject<ExcelWorker>;
   #ngZone = inject(NgZone);
@@ -84,25 +81,6 @@ export class ComlinkWebWorkerComponent {
     this.#worker.paramComplexObject(dto);
   }
 
-  onSubmitUploadForm() {
-    if (this.uploadForm.valid) {
-      const fileReader = new FileReader();
-      fileReader.onload = (e: any) => {
-        // const workBook = read(this.uploadForm.value.file!,{type:'file'});
-        const workBook = read(e.target.result, { type: 'binary' });
-        const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
-        console.log(utils.sheet_to_json(firstSheet).length);
-      };
-      fileReader.readAsBinaryString(this.uploadForm.value.file!);
-    }
-  }
-
-  onChangeFileInput(e: Event) {
-    this.uploadForm.patchValue({
-      file: (e.target as HTMLInputElement).files![0],
-    });
-  }
-
   xxxxxx() {
     const rowCount = 1000000;
     const data = [];
@@ -134,8 +112,23 @@ export class ComlinkWebWorkerComponent {
 
   excelInWorker() {
     console.log('call excelInWorker');
-    this.#excelWorker.generateDatas().then((result: string) => {
-      console.log('buffer result', result);
+    this.#excelWorker.generateDatas().then((result: ArrayBuffer) => {
+      console.log('ArrayBuffer result:', result);
+      console.log(
+        `ArrayBuffer size in mb ~ ${this.bytesToSize(result.byteLength)}`
+      );
     });
+  }
+
+  private bytesToSize(bytes: number) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) {
+      return 'n/a';
+    }
+    let i = parseInt(`${Math.floor(Math.log(bytes) / Math.log(1024))}`);
+    if (i == 0) {
+      return bytes + ' ' + sizes[i];
+    }
+    return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
   }
 }
