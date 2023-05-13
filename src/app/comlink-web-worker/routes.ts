@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import { SimpleWebWorkerComponent } from '../simple-web-worker/simple-web-worker.component';
 import { ComlinkWorker } from './worker/comlink.worker';
-import { proxy, Remote, wrap } from 'comlink';
+import { proxy, releaseProxy, Remote, wrap } from 'comlink';
 
 export const ROUTES: Route[] = [
   {
@@ -30,15 +30,17 @@ export const ROUTES: Route[] = [
           ).then((proxyWorker) => ({
             rawWorker,
             proxyWorker,
+            xxx: workerProxy,
           }))
         );
       },
     },
     canDeactivate: [
-      (
+      async (
         component: SimpleWebWorkerComponent,
         currentRoute: ActivatedRouteSnapshot
       ) => {
+        await currentRoute.data['worker'].proxyWorker[releaseProxy]();
         (currentRoute.data['worker'].rawWorker as Worker).terminate();
         return true;
       },

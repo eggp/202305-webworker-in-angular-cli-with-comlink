@@ -5,7 +5,7 @@
 //   const response = `worker response to ${data}`;
 //   postMessage(response);
 // });
-import { expose } from 'comlink';
+import { expose, finalizer } from 'comlink';
 import { timeout, timer } from 'rxjs';
 import { WorkerDto } from './type/worker.dto';
 
@@ -47,6 +47,10 @@ export class ComlinkWorker {
   paramComplexObject(param: WorkerDto) {
     console.log('[WORKER]', 'paramComplexObject:', param);
   }
+
+  [finalizer] = () => {
+    debugger;
+  };
 }
 
 // Required!
