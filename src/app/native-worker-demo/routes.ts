@@ -1,12 +1,12 @@
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
-import { SimpleWebWorkerComponent } from './simple-web-worker.component';
+import { NativeWorkerDemoComponent } from './native-worker-demo.component';
 
 export const ROUTES: Route[] = [
   {
     path: '',
     loadComponent: () =>
-      import('./simple-web-worker.component').then(
-        (m) => m.SimpleWebWorkerComponent
+      import('./native-worker-demo.component').then(
+        (m) => m.NativeWorkerDemoComponent
       ),
     resolve: {
       worker: () =>
@@ -15,7 +15,7 @@ export const ROUTES: Route[] = [
     },
     canDeactivate: [
       (
-        component: SimpleWebWorkerComponent,
+        component: NativeWorkerDemoComponent,
         currentRoute: ActivatedRouteSnapshot
       ) => {
         // destroy worker

@@ -12,13 +12,13 @@ export const routes: Routes = [
       import('./home/home.component').then((m) => m.HomeComponent),
   },
   {
-    path: 'simple-web-worker',
+    path: 'native-worker-demo',
     loadChildren: () =>
-      import('./simple-web-worker/routes').then((m) => m.ROUTES),
+      import('./native-worker-demo/routes').then((m) => m.ROUTES),
   },
   {
-    path: 'comlink-web-worker',
+    path: 'comlink-worker-demo',
     loadChildren: () =>
-      import('./comlink-web-worker/routes').then((m) => m.ROUTES),
+      import('./comlink-worker-demo/routes').then((m) => m.ROUTES),
   },
 ];

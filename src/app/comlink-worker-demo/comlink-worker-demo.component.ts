@@ -17,9 +17,9 @@ import { type ExcelWorker } from './worker/excel.worker';
   selector: 'app-comlink-web-worker',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './comlink-web-worker.component.html',
+  templateUrl: './comlink-worker-demo.component.html',
 })
-export class ComlinkWebWorkerComponent {
+export class ComlinkWorkerDemoComponent {
   form = new FormGroup({
     msg: new FormControl('', {
       nonNullable: true,

@@ -1,1 +1,19 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               role="navigation"
+               mode="side"
+               [opened]="true">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/native-worker-demo">Native worker demo</a>
+      <a mat-list-item routerLink="/comlink-worker-demo">Comlink worker demo</a>
+      <a mat-list-item routerLink="/excel-write-with-comlink-worker-demo">Excel writer with comlink worker demo</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <span>202305-webworker-in-angular-cli-with-comlink</span>
+    </mat-toolbar>
+    <div id="content-area"><router-outlet></router-outlet></div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

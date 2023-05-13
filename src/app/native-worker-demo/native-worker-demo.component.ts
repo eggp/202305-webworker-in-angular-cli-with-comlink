@@ -7,14 +7,26 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-simple-web-worker',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
-  templateUrl: './simple-web-worker.component.html',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
+  templateUrl: './native-worker-demo.component.html',
+  styleUrls: ['./native-worker-demo.component.scss'],
 })
-export class SimpleWebWorkerComponent implements OnInit {
+export class NativeWorkerDemoComponent implements OnInit {
   #worker = inject(ActivatedRoute).snapshot.data['worker'] as Worker;
   form = new FormGroup({
     msg: new FormControl('', {

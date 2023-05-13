@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComlinkWebWorkerComponent } from './comlink-web-worker.component';
+import { ComlinkWorkerDemoComponent } from './comlink-worker-demo.component';
 
 describe('ComlinkWebWorkerComponent', () => {
-  let component: ComlinkWebWorkerComponent;
-  let fixture: ComponentFixture<ComlinkWebWorkerComponent>;
+  let component: ComlinkWorkerDemoComponent;
+  let fixture: ComponentFixture<ComlinkWorkerDemoComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ComlinkWebWorkerComponent]
+      imports: [ComlinkWorkerDemoComponent]
     });
-    fixture = TestBed.createComponent(ComlinkWebWorkerComponent);
+    fixture = TestBed.createComponent(ComlinkWorkerDemoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

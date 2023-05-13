@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SimpleWebWorkerComponent } from './simple-web-worker.component';
+import { NativeWorkerDemoComponent } from './native-worker-demo.component';
 
 describe('SimpleWebWorkerComponent', () => {
-  let component: SimpleWebWorkerComponent;
-  let fixture: ComponentFixture<SimpleWebWorkerComponent>;
+  let component: NativeWorkerDemoComponent;
+  let fixture: ComponentFixture<NativeWorkerDemoComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SimpleWebWorkerComponent]
+      imports: [NativeWorkerDemoComponent]
     });
-    fixture = TestBed.createComponent(SimpleWebWorkerComponent);
+    fixture = TestBed.createComponent(NativeWorkerDemoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

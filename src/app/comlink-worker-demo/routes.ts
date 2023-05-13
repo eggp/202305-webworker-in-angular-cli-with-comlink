@@ -1,5 +1,5 @@
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
-import { SimpleWebWorkerComponent } from '../simple-web-worker/simple-web-worker.component';
+import { NativeWorkerDemoComponent } from '../native-worker-demo/native-worker-demo.component';
 import { ComlinkWorker } from './worker/comlink.worker';
 import { proxy, releaseProxy, Remote, wrap } from 'comlink';
 
@@ -7,8 +7,8 @@ export const ROUTES: Route[] = [
   {
     path: '',
     loadComponent: () =>
-      import('./comlink-web-worker.component').then(
-        (m) => m.ComlinkWebWorkerComponent
+      import('./comlink-worker-demo.component').then(
+        (m) => m.ComlinkWorkerDemoComponent
       ),
     resolve: {
       worker: () => {
@@ -37,7 +37,7 @@ export const ROUTES: Route[] = [
     },
     canDeactivate: [
       async (
-        component: SimpleWebWorkerComponent,
+        component: NativeWorkerDemoComponent,
         currentRoute: ActivatedRouteSnapshot
       ) => {
         await currentRoute.data['worker'].proxyWorker[releaseProxy]();
