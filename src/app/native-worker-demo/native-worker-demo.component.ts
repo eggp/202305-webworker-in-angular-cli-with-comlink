@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostBinding, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -11,6 +11,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { BehaviorSubject } from 'rxjs';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-simple-web-worker',
@@ -22,22 +24,38 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatListModule,
   ],
   templateUrl: './native-worker-demo.component.html',
   styleUrls: ['./native-worker-demo.component.scss'],
 })
-export class NativeWorkerDemoComponent implements OnInit {
-  #worker = inject(ActivatedRoute).snapshot.data['worker'] as Worker;
+export default class NativeWorkerDemoComponent implements OnInit {
   form = new FormGroup({
     msg: new FormControl('', {
       nonNullable: true,
       validators: Validators.required,
     }),
   });
+  readonly messages$ = new BehaviorSubject<
+    {
+      to: { msg: string; create: string };
+      reply?: { msg: string; create: string };
+    }[]
+  >([]);
+  #worker = inject(ActivatedRoute).snapshot.data['worker'] as Worker;
 
   ngOnInit() {
-    this.#worker.onmessage = ({ data }) =>
-      console.log('[SimpleWebWorkerComponent]', `got message: ${data}`);
+    this.#worker.onmessage = ({ data }) => {
+      // console.log('[SimpleWebWorkerComponent]', `got message: ${data}`);
+      const messages = this.messages$.getValue();
+      messages[messages.length - 1].reply = {
+        msg: data,
+        create: this.nowString(),
+      };
+      this.messages$.next([...messages]);
+      this.form.enable();
+      this.form.reset();
+    };
   }
 
   sendTestMessage(msg: string) {
@@ -46,7 +64,18 @@ export class NativeWorkerDemoComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.sendTestMessage(this.form.value.msg!);
+      const msg = this.form.value.msg!;
+      this.form.disable();
+      this.messages$.next(
+        this.messages$
+          .getValue()
+          .concat({ to: { msg, create: this.nowString() } })
+      );
+      this.sendTestMessage(msg);
     }
+  }
+
+  private nowString() {
+    return new Date().toString();
   }
 }

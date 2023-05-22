@@ -19,7 +19,7 @@ import { type ExcelWorker } from './worker/excel.worker';
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './comlink-worker-demo.component.html',
 })
-export class ComlinkWorkerDemoComponent {
+export default class ComlinkWorkerDemoComponent {
   form = new FormGroup({
     msg: new FormControl('', {
       nonNullable: true,

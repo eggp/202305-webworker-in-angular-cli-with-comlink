@@ -8,7 +8,7 @@ describe('SimpleWebWorkerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NativeWorkerDemoComponent]
+      imports: [NativeWorkerDemoComponent],
     });
     fixture = TestBed.createComponent(NativeWorkerDemoComponent);
     component = fixture.componentInstance;

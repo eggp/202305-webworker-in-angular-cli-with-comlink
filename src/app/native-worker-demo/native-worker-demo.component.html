@@ -1,16 +1,37 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="center-center">
-  <mat-card>
-    <mat-card-header
-      ><mat-card-title>Send message to worker</mat-card-title></mat-card-header
-    >
-    <mat-card-content>
-      <mat-form-field>
-        <mat-label>Message</mat-label>
-        <textarea matInput formControlName="msg"></textarea>
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button type="submit" mat-button>Send</button>
-    </mat-card-actions>
-  </mat-card>
-</form>
+<div class="center-center wrapper">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-header
+        ><mat-card-title
+          >Send message to worker</mat-card-title
+        ></mat-card-header
+      >
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="msg" rows="5"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button type="submit" mat-button>Send</button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+  <ng-container *ngIf="messages$ | async as messages">
+    <mat-card *ngIf="messages.length > 0" class="messages"
+      ><mat-card-header
+        ><mat-card-title>Messages</mat-card-title></mat-card-header
+      ><mat-card-content
+        ><mat-list role="list"
+          ><mat-list-item role="listitem" *ngFor="let message of messages"
+            ><span matListItemTitle
+              >{{ message.to.create }} | {{ message.to.msg }}</span
+            ><span matListItemLine *ngIf="message.reply !== undefined"
+              >{{ message.reply!.create }} | {{ message.reply!.msg }}</span
+            ></mat-list-item
+          ></mat-list
+        ></mat-card-content
+      ></mat-card
+    ></ng-container
+  >
+</div>

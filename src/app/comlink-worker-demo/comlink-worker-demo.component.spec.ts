@@ -8,7 +8,7 @@ describe('ComlinkWebWorkerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ComlinkWorkerDemoComponent]
+      imports: [ComlinkWorkerDemoComponent],
     });
     fixture = TestBed.createComponent(ComlinkWorkerDemoComponent);
     component = fixture.componentInstance;

@@ -1,13 +1,10 @@
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
-import { NativeWorkerDemoComponent } from './native-worker-demo.component';
+import type NativeWorkerDemoComponent from './native-worker-demo.component';
 
 export const ROUTES: Route[] = [
   {
     path: '',
-    loadComponent: () =>
-      import('./native-worker-demo.component').then(
-        (m) => m.NativeWorkerDemoComponent
-      ),
+    loadComponent: () => import('./native-worker-demo.component'),
     resolve: {
       worker: () =>
         // create native worker

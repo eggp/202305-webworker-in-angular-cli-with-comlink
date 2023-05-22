@@ -1,15 +1,12 @@
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
-import { NativeWorkerDemoComponent } from '../native-worker-demo/native-worker-demo.component';
-import { ComlinkWorker } from './worker/comlink.worker';
+import { type ComlinkWorker } from './worker/comlink.worker';
 import { proxy, releaseProxy, Remote, wrap } from 'comlink';
+import type NativeWorkerDemoComponent from '../native-worker-demo/native-worker-demo.component';
 
 export const ROUTES: Route[] = [
   {
     path: '',
-    loadComponent: () =>
-      import('./comlink-worker-demo.component').then(
-        (m) => m.ComlinkWorkerDemoComponent
-      ),
+    loadComponent: () => import('./comlink-worker-demo.component'),
     resolve: {
       worker: () => {
         // create native worker
@@ -18,21 +15,20 @@ export const ROUTES: Route[] = [
         );
         // create proxy generator
         const workerProxy = wrap<ComlinkWorker>(rawWorker);
+        const workerProxyCreateInstancePromise =
+          // @ts-ignore
+          new workerProxy(
+            // fill constructor params
+            'paramString',
+            proxy((param: string) => console.log('inited paramFn: ', param))
+          ) as Promise<Remote<ComlinkWorker>>;
 
-        return (
-          (
-            // @ts-ignore
-            new workerProxy(
-              // fill constructor params
-              'paramString',
-              proxy((param: string) => console.log('inited paramFn: ', param))
-            ) as Promise<Remote<ComlinkWorker>>
-          ).then((proxyWorker) => ({
-            rawWorker,
-            proxyWorker,
-            xxx: workerProxy,
-          }))
-        );
+        // TODO create type
+        return workerProxyCreateInstancePromise.then((proxyWorker) => ({
+          rawWorker,
+          proxyWorker,
+          xxx: workerProxy,
+        }));
       },
     },
     canDeactivate: [
@@ -40,7 +36,9 @@ export const ROUTES: Route[] = [
         component: NativeWorkerDemoComponent,
         currentRoute: ActivatedRouteSnapshot
       ) => {
+        // call Comlink "onDestroy"
         await currentRoute.data['worker'].proxyWorker[releaseProxy]();
+        // destroy worker
         (currentRoute.data['worker'].rawWorker as Worker).terminate();
         return true;
       },
