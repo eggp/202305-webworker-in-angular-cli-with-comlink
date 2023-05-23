@@ -1,0 +1,62 @@
+<div class="center-center wrapper">
+  <mat-card
+    ><mat-card-header
+      ><mat-card-title
+        >Generate excel with fake data</mat-card-title
+      ></mat-card-header
+    ><mat-card-content
+      ><div style="margin-bottom: 0.5rem">
+        <div><b>Generate rows count</b></div>
+        <mat-slider
+          class="w-100"
+          max="10000000"
+          min="0"
+          step="50000"
+          discrete="true"
+          showTickMarks="true"
+        >
+          <input matSliderThumb [formControl]="rowsCountControl"
+        /></mat-slider>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="runInAngularContext()"
+        >
+          Run in Angular context(freeze browser when rows ~ 1M)</button
+        ><button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="runInJSContext()"
+        >
+          Run in JS context(maybe freeze browser when rows ~ 1M)</button
+        ><button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="runInWorkerContext()"
+        >
+          Run in Worker context( :) )
+        </button>
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="onClickDownloadFile()"
+          [disabled]="generatedExcelFile === null"
+        >
+          <div style="display: flex; gap: 0.2rem; align-items: center">
+            <div>Download generated file</div>
+            <mat-progress-spinner
+              *ngIf="loading"
+              color="accent"
+              mode="indeterminate"
+              diameter="24"
+            ></mat-progress-spinner>
+          </div>
+        </button></div></mat-card-content
+  ></mat-card>
+</div>

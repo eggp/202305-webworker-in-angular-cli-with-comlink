@@ -1,11 +1,11 @@
-import { expose, transfer } from 'comlink';
+import { expose } from 'comlink';
 import { faker } from '@faker-js/faker';
 import { utils, write } from 'xlsx';
 
 export class ExcelWorker {
   constructor() {}
 
-  generateDatas(rowsCount:number) {
+  generateDatas(rowsCount: number) {
     const startTime = performance.now();
 
     console.log('[ExcelWorker]', 'call generateDatas');

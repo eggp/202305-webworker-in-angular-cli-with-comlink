@@ -6,7 +6,7 @@
 //   postMessage(response);
 // });
 import { expose, finalizer } from 'comlink';
-import { timeout, timer } from 'rxjs';
+import { timer } from 'rxjs';
 import { WorkerDto } from './type/worker.dto';
 
 export class ComlinkWorker {

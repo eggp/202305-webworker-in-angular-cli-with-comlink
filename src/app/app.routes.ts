@@ -20,4 +20,16 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./comlink-worker-demo/routes').then((m) => m.ROUTES),
   },
+  {
+    path: 'comlink-worker-demo',
+    loadChildren: () =>
+      import('./comlink-worker-demo/routes').then((m) => m.ROUTES),
+  },
+  {
+    path: 'excel-writer-with-comlink-worker-demo',
+    loadChildren: () =>
+      import('./excel-writer-with-comlink-worker-demo/routes').then(
+        (m) => m.ROUTES
+      ),
+  },
 ];

@@ -7,17 +7,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { proxy, RemoteObject, wrap } from 'comlink';
-import { WorkerDto } from './worker/type/worker.dto';
-import { utils, write } from 'xlsx';
-import { faker } from '@faker-js/faker';
-import { type ExcelWorker } from './worker/excel.worker';
+import { proxy, RemoteObject } from 'comlink';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSliderModule } from '@angular/material/slider';
+import { type ComlinkWorker } from './worker/comlink.worker';
+import { WorkerDto } from './worker/type/worker.dto';
 
 @Component({
   selector: 'app-comlink-web-worker',
@@ -43,25 +41,13 @@ export default class ComlinkWorkerDemoComponent {
       validators: Validators.required,
     }),
   });
-  readonly rowsCountControl = new FormControl(1000000, { nonNullable: true });
-  #worker = inject(ActivatedRoute).snapshot.data['worker'].proxyWorker;
-  #excelWorker!: RemoteObject<ExcelWorker>;
+  #worker = inject(ActivatedRoute).snapshot.data['worker']
+    .proxyWorker as RemoteObject<ComlinkWorker>;
   #ngZone = inject(NgZone);
-
-  constructor() {
-    // create native worker
-    const rawWorker = new Worker(
-      new URL('./worker/excel.worker', import.meta.url)
-    );
-    // create proxy generator
-    const workerProxy = wrap<ExcelWorker>(rawWorker);
-    // @ts-ignore
-    new workerProxy().then((proxyWorker) => (this.#excelWorker = proxyWorker));
-  }
 
   onSubmitSetParamString() {
     if (this.form.valid) {
-      this.#worker.paramString = this.form.value.msg!;
+      (this.#worker as any).paramString = this.form.value.msg!;
     }
   }
 
@@ -97,68 +83,5 @@ export default class ComlinkWorkerDemoComponent {
       ],
     };
     this.#worker.paramComplexObject(dto);
-  }
-
-  runInAngularContext(logContext = 'runInAngularContext') {
-    const rowCount = this.rowsCountControl.value;
-    const data = [];
-    for (let i = 0; i < rowCount; i++) {
-      data.push({
-        userId: faker.string.uuid(),
-        username: faker.internet.userName(),
-        email: faker.internet.email(),
-        avatar: faker.image.avatar(),
-        password: faker.internet.password(),
-        birthdate: faker.date.birthdate(),
-        registeredAt: faker.date.past(),
-      });
-    }
-
-    /* generate worksheet */
-    const ws = utils.json_to_sheet(data);
-
-    /* generate workbook and add the worksheet */
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'Sheet1');
-    const result = write(wb, {
-      type: 'buffer',
-      compression: true,
-    }) as ArrayBuffer;
-    console.log(`[${logContext}]`, 'ArrayBuffer result:', result);
-    console.log(
-      `[${logContext}]`,
-      `ArrayBuffer size in mb ~ ${this.bytesToSize(result.byteLength)}`
-    );
-  }
-
-  runInJSContext() {
-    this.#ngZone.runOutsideAngular(() =>
-      this.runInAngularContext('runInJSContext')
-    );
-  }
-
-  runInWorkerContext() {
-    console.log('call runInWorkerContext');
-    this.#excelWorker
-      .generateDatas(this.rowsCountControl.value)
-      .then((result: ArrayBuffer) => {
-        console.log('[runInWorkerContext]', 'ArrayBuffer result:', result);
-        console.log(
-          '[runInWorkerContext]',
-          `ArrayBuffer size in mb ~ ${this.bytesToSize(result.byteLength)}`
-        );
-      });
-  }
-
-  private bytesToSize(bytes: number) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes == 0) {
-      return 'n/a';
-    }
-    let i = parseInt(`${Math.floor(Math.log(bytes) / Math.log(1024))}`);
-    if (i == 0) {
-      return bytes + ' ' + sizes[i];
-    }
-    return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
   }
 }
