@@ -5,11 +5,11 @@ import { utils, write } from 'xlsx';
 export class ExcelWorker {
   constructor() {}
 
-  generateDatas() {
+  generateDatas(rowsCount:number) {
     const startTime = performance.now();
 
     console.log('[ExcelWorker]', 'call generateDatas');
-    const rowCount = 1000000;
+    const rowCount = rowsCount;
     let data = [];
     for (let i = 0; i < rowCount; i++) {
       data.push({

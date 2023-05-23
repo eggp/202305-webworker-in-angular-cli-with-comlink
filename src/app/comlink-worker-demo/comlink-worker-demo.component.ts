@@ -9,23 +9,41 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { proxy, RemoteObject, wrap } from 'comlink';
 import { WorkerDto } from './worker/type/worker.dto';
-import { read, utils, write } from 'xlsx';
+import { utils, write } from 'xlsx';
 import { faker } from '@faker-js/faker';
 import { type ExcelWorker } from './worker/excel.worker';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
   selector: 'app-comlink-web-worker',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatListModule,
+    MatSliderModule,
+  ],
   templateUrl: './comlink-worker-demo.component.html',
+  styleUrls: ['./comlink-worker-demo.component.scss'],
 })
 export default class ComlinkWorkerDemoComponent {
-  form = new FormGroup({
+  readonly form = new FormGroup({
     msg: new FormControl('', {
       nonNullable: true,
       validators: Validators.required,
     }),
   });
+  readonly rowsCountControl = new FormControl(1000000, { nonNullable: true });
   #worker = inject(ActivatedRoute).snapshot.data['worker'].proxyWorker;
   #excelWorker!: RemoteObject<ExcelWorker>;
   #ngZone = inject(NgZone);
@@ -47,11 +65,11 @@ export default class ComlinkWorkerDemoComponent {
     }
   }
 
-  onCallParamFn() {
+  onWorkerCallParamFn() {
     this.#worker.callParamFn();
   }
 
-  onCallWithCallback() {
+  onWorkerCallWithCallback() {
     this.#worker.withCallback(
       proxy((param: number) => {
         console.log(
@@ -63,7 +81,7 @@ export default class ComlinkWorkerDemoComponent {
     );
   }
 
-  onCallParamComplexObject() {
+  onWorkerCallParamComplexObject() {
     const dto: WorkerDto = {
       param1: 'param1',
       children: [
@@ -81,8 +99,8 @@ export default class ComlinkWorkerDemoComponent {
     this.#worker.paramComplexObject(dto);
   }
 
-  xxxxxx() {
-    const rowCount = 1000000;
+  runInAngularContext(logContext = 'runInAngularContext') {
+    const rowCount = this.rowsCountControl.value;
     const data = [];
     for (let i = 0; i < rowCount; i++) {
       data.push({
@@ -102,22 +120,34 @@ export default class ComlinkWorkerDemoComponent {
     /* generate workbook and add the worksheet */
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Sheet1');
-    const base64 = write(wb, { type: 'base64' });
-    console.log('base64: ', base64);
+    const result = write(wb, {
+      type: 'buffer',
+      compression: true,
+    }) as ArrayBuffer;
+    console.log(`[${logContext}]`, 'ArrayBuffer result:', result);
+    console.log(
+      `[${logContext}]`,
+      `ArrayBuffer size in mb ~ ${this.bytesToSize(result.byteLength)}`
+    );
   }
 
-  withoutZone() {
-    this.#ngZone.runOutsideAngular(() => this.xxxxxx());
+  runInJSContext() {
+    this.#ngZone.runOutsideAngular(() =>
+      this.runInAngularContext('runInJSContext')
+    );
   }
 
-  excelInWorker() {
-    console.log('call excelInWorker');
-    this.#excelWorker.generateDatas().then((result: ArrayBuffer) => {
-      console.log('ArrayBuffer result:', result);
-      console.log(
-        `ArrayBuffer size in mb ~ ${this.bytesToSize(result.byteLength)}`
-      );
-    });
+  runInWorkerContext() {
+    console.log('call runInWorkerContext');
+    this.#excelWorker
+      .generateDatas(this.rowsCountControl.value)
+      .then((result: ArrayBuffer) => {
+        console.log('[runInWorkerContext]', 'ArrayBuffer result:', result);
+        console.log(
+          '[runInWorkerContext]',
+          `ArrayBuffer size in mb ~ ${this.bytesToSize(result.byteLength)}`
+        );
+      });
   }
 
   private bytesToSize(bytes: number) {
