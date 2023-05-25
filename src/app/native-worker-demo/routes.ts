@@ -1,24 +1,27 @@
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import type NativeWorkerDemoComponent from './native-worker-demo.component';
+import {
+  destroyWorkerProvider,
+  nativeWorkerProvider,
+} from './provider/worker.provider';
 
 export const ROUTES: Route[] = [
   {
     path: '',
     loadComponent: () => import('./native-worker-demo.component'),
     resolve: {
-      worker: () =>
-        // create native worker
-        new Worker(new URL('./worker/simple.worker', import.meta.url)),
+      worker: nativeWorkerProvider,
     },
     canDeactivate: [
       (
         component: NativeWorkerDemoComponent,
         currentRoute: ActivatedRouteSnapshot
       ) => {
-        // destroy worker
-        (currentRoute.data['worker'] as Worker).terminate();
+        destroyWorkerProvider(currentRoute.data as { worker: Worker });
         return true;
       },
     ],
   },
 ];
+
+export default ROUTES;

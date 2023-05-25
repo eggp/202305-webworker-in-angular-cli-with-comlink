@@ -1,4 +1,4 @@
-import { Component, inject, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -6,16 +6,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { proxy, RemoteObject } from 'comlink';
+import { RouterLink } from '@angular/router';
+import { proxy } from 'comlink';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSliderModule } from '@angular/material/slider';
-import { type ComlinkWorker } from './worker/comlink.worker';
 import { WorkerDto } from './worker/type/worker.dto';
+import { getWorkerFromRouterData } from './provider/worker.provider';
 
 @Component({
   selector: 'app-comlink-web-worker',
@@ -41,9 +41,7 @@ export default class ComlinkWorkerDemoComponent {
       validators: Validators.required,
     }),
   });
-  #worker = inject(ActivatedRoute).snapshot.data['worker']
-    .proxyWorker as RemoteObject<ComlinkWorker>;
-  #ngZone = inject(NgZone);
+  #worker = getWorkerFromRouterData();
 
   onSubmitSetParamString() {
     if (this.form.valid) {

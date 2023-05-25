@@ -12,24 +12,19 @@ export const routes: Routes = [
   },
   {
     path: 'native-worker-demo',
-    loadChildren: () =>
-      import('./native-worker-demo/routes').then((m) => m.ROUTES),
+    loadChildren: () => import('./native-worker-demo/routes'),
   },
   {
     path: 'comlink-worker-demo',
-    loadChildren: () =>
-      import('./comlink-worker-demo/routes').then((m) => m.ROUTES),
+    loadChildren: () => import('./comlink-worker-demo/routes'),
   },
   {
     path: 'comlink-worker-demo',
-    loadChildren: () =>
-      import('./comlink-worker-demo/routes').then((m) => m.ROUTES),
+    loadChildren: () => import('./comlink-worker-demo/routes'),
   },
   {
     path: 'excel-writer-with-comlink-worker-demo',
     loadChildren: () =>
-      import('./excel-writer-with-comlink-worker-demo/routes').then(
-        (m) => m.ROUTES
-      ),
+      import('./excel-writer-with-comlink-worker-demo/routes'),
   },
 ];

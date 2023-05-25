@@ -12,12 +12,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
-import { ActivatedRoute } from '@angular/router';
-import { RemoteObject } from 'comlink';
 import { faker } from '@faker-js/faker';
 import { utils, write } from 'xlsx';
-import { ExcelWorker } from './worker/excel.worker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { getWorkerFromRouterData } from './provider/worker.provider';
 
 @Component({
   selector: 'app-excel-writer-with-comlink-worker-demo',
@@ -44,8 +42,7 @@ export default class ExcelWriterWithComlinkWorkerDemoComponent {
     }),
   });
   readonly rowsCountControl = new FormControl(1000000, { nonNullable: true });
-  #worker = inject(ActivatedRoute).snapshot.data['worker']
-    .proxyWorker as RemoteObject<ExcelWorker>;
+  #worker = getWorkerFromRouterData();
   #ngZone = inject(NgZone);
   generatedExcelFile: ArrayBuffer | null = null;
   loading = false;
@@ -116,9 +113,8 @@ export default class ExcelWriterWithComlinkWorkerDemoComponent {
     const file = new Blob([this.generatedExcelFile!], {
       type: 'application/vnd.ms-excel;charset=utf-8',
     });
-    const a = document.createElement('a'),
-      url = URL.createObjectURL(file);
-    a.href = url;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(file);
     a.download = 'generated.xlsx';
     document.body.appendChild(a);
     a.click();

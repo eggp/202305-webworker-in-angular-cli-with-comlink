@@ -9,11 +9,12 @@
         <div><b>Generate rows count</b></div>
         <mat-slider
           class="w-100"
-          max="10000000"
+          max="1000000"
           min="0"
           step="50000"
           discrete="true"
           showTickMarks="true"
+          style="max-width: -webkit-fill-available"
         >
           <input matSliderThumb [formControl]="rowsCountControl"
         /></mat-slider>

@@ -1,6 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -13,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BehaviorSubject } from 'rxjs';
 import { MatListModule } from '@angular/material/list';
+import { getWorkerFromRouterData } from './provider/worker.provider';
 
 @Component({
   selector: 'app-simple-web-worker',
@@ -42,7 +42,7 @@ export default class NativeWorkerDemoComponent implements OnInit {
       reply?: { msg: string; create: string };
     }[]
   >([]);
-  #worker = inject(ActivatedRoute).snapshot.data['worker'] as Worker;
+  #worker = getWorkerFromRouterData();
 
   ngOnInit() {
     this.#worker.onmessage = ({ data }) => {
