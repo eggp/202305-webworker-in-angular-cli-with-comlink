@@ -1,0 +1,2 @@
+(()=>{"use strict";console.log("[SIMPLE WORKER]","Start simple worker"),addEventListener("message",({data:e})=>{console.log("[SIMPLE WORKER]","Got message: ",e),postMessage(`worker response to ${e}`)})})();
+//# sourceMappingURL=22.da203359249c3d20.js.map
