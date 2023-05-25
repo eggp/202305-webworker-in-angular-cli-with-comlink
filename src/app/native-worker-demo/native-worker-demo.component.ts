@@ -30,7 +30,7 @@ import { getWorkerFromRouterData } from './provider/worker.provider';
   styleUrls: ['./native-worker-demo.component.scss'],
 })
 export default class NativeWorkerDemoComponent implements OnInit {
-  form = new FormGroup({
+  readonly form = new FormGroup({
     msg: new FormControl('', {
       nonNullable: true,
       validators: Validators.required,
